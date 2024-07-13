@@ -1,0 +1,35 @@
+.searchWrapper {
+  height: 63px;
+  background-color: #987373;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchForm {
+  display: flex;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  height: 35px;
+  width: 400px;
+  padding-left: 35px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-weight: bolder;
+  font-size: larger;
+  color: black;
+}
+
+.searchBtn {
+  background-color: transparent;
+  position: absolute;
+  left: 5px;
+}

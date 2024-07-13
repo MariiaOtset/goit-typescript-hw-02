@@ -20,10 +20,8 @@ export const fetchImages = async (
   const searchParams = new URLSearchParams({
     query,
     page: page.toString(),
-    per_page: per_page.toString(),
+    per_page: "20",
   });
-  // return (await axios(`${BASE_URL}?${searchParams}`, options)).data;
-
   const response: AxiosResponse<UnsplashApiResponse> = await axios.get(
     `${BASE_URL}?${searchParams}`,
     options

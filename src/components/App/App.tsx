@@ -1,32 +1,31 @@
 import { useState, useEffect, useRef } from "react";
-import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
-import ImageGallery from "./components/ImageGallery/ImageGallery";
-import ImageModal from "./components/ImageModal/ImageModal";
-import Loader from "./components/Loader/Loader";
-import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
-import SearchBar from "./components/SearchBar/SearchBar";
-
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import ImageGallery from "../ImageGallery/ImageGallery";
+import ImageModal from "../ImageModal/ImageModal";
+import Loader from "../Loader/Loader";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import SearchBar from "../SearchBar/SearchBar";
+import { ModalInfo, ImageData, HandleImageClick } from "./App.types";
 import "./App.css";
+import { fetchImages } from "../../api/unsplash-api";
 
-import { fetchImages } from "./api/unsplash-api";
-
-const INITIAL_MODAL_INFO = {
+const INITIAL_MODAL_INFO: ModalInfo = {
   isOpen: false,
   url: "",
   description: "",
 };
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [galleryImages, setGalleryImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [modalInfo, setModalInfo] = useState(INITIAL_MODAL_INFO);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [galleryImages, setGalleryImages] = useState<ImageData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [modalInfo, setModalInfo] = useState<ModalInfo>(INITIAL_MODAL_INFO);
 
-  const appRef = useRef();
+  const appRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = (newQuery) => {
+  const handleSearch = (newQuery: string): void => {
     if (newQuery === searchQuery) return;
 
     setCurrentPage(1);
@@ -34,30 +33,30 @@ function App() {
     setGalleryImages([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setCurrentPage((prev) => prev + 1);
   };
 
-  const handleModalClose = () => setModalInfo(INITIAL_MODAL_INFO);
+  const handleModalClose = (): void => setModalInfo(INITIAL_MODAL_INFO);
 
-  const handleImageClick = ({ url, description }) => {
+  const handleImageClick: HandleImageClick = ({ url = "", description = "" }) =>
     setModalInfo({ isOpen: true, url, description });
-  };
 
   useEffect(() => {
     if (searchQuery === "") return;
 
-    async function getImages() {
+    async function getImages(): Promise<void> {
       setIsLoading(true);
       setError(null);
 
       try {
-        const data = await fetchImages(searchQuery, currentPage);
+        const data = await fetchImages(searchQuery, currentPage, 20);
+
         if (data.results.length === 0) throw new Error("No results found");
         setGalleryImages((prev) => [...prev, ...data.results]);
       } catch (error) {
-        setError(error);
-        throw new Error(error.message);
+        setError(error as Error);
+        throw new Error((error as Error).message);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +67,7 @@ function App() {
   useEffect(() => {
     if (currentPage === 1) return;
 
-    appRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    appRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [galleryImages, currentPage]);
 
   return (

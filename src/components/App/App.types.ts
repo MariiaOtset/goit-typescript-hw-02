@@ -16,3 +16,9 @@ export type HandleImageClick = ({
   url,
   description,
 }: Pick<ModalInfo, "url" | "description">) => void;
+
+export type HandleModalClose = () => void;
+
+export type HandleLoadMoreClick = () => void;
+
+export type HandleSearch = (newQuery: string) => void;

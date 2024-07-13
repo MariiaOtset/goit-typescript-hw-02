@@ -1,7 +1,18 @@
 import css from "./ImageModal.module.css";
+import { FC } from "react";
 import ReactModal from "react-modal";
+import { ModalInfo, HandleModalClose } from "../App/App.types";
 
-const ImageModal = ({ isOpen, url, description, onClose }) => {
+interface ImageModalProps extends ModalInfo {
+  onClose: HandleModalClose;
+}
+
+const ImageModal: FC<ImageModalProps> = ({
+  isOpen,
+  url,
+  description,
+  onClose,
+}) => {
   return (
     <ReactModal
       portalClassName={css.modalPortal}

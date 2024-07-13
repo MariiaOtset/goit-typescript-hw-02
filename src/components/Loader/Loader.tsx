@@ -1,8 +1,9 @@
-import css from "./Loader.module.css";
+// import css from "./Loader.module.css";
 import { InfinitySpin } from "react-loader-spinner";
+import React from "react";
 
-const Loader = () => {
-  return <InfinitySpin wrapperClass={css.spinner} />;
+const Loader: React.FC = () => {
+  return <InfinitySpin width="200" color="#4fa94d"/>;
 };
 
 export default Loader;

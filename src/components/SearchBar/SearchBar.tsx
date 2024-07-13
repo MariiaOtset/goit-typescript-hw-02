@@ -1,13 +1,22 @@
 import css from "./SearchBar.module.css";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
+import { FC, FormEvent } from "react";
+import { HandleSearch } from "../App/App.types";
+import { FormElements } from "./SearchBar.types";
 
-const SearchBar = ({ onSearch }) => {
+interface SearchBarProps {
+  onSearch: HandleSearch;
+}
+
+const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
   const notify = () => toast.error("Please enter the text for images search");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const searchQuery = event.currentTarget.elements.search.value.trim();
+    const form = event.currentTarget;
+    const formElements = form.elements as FormElements;
+    const searchQuery = formElements.search.value.trim();
 
     if (searchQuery === "") {
       notify();

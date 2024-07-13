@@ -5,9 +5,10 @@ import ImageModal from "../ImageModal/ImageModal";
 import Loader from "../Loader/Loader";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import SearchBar from "../SearchBar/SearchBar";
-import { ModalInfo, ImageData, HandleImageClick } from "./App.types";
+import { ModalInfo, HandleImageClick } from "./App.types";
 import "./App.css";
 import { fetchImages } from "../../api/unsplash-api";
+import { Photo } from "../../api/unsplash-api.types";
 
 const INITIAL_MODAL_INFO: ModalInfo = {
   isOpen: false,
@@ -17,7 +18,7 @@ const INITIAL_MODAL_INFO: ModalInfo = {
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [galleryImages, setGalleryImages] = useState<ImageData[]>([]);
+  const [galleryImages, setGalleryImages] = useState<Photo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -50,10 +51,10 @@ function App() {
       setError(null);
 
       try {
-        const data = await fetchImages(searchQuery, currentPage, 20);
+        const data = await fetchImages(searchQuery, currentPage);
 
-        if (data.results.length === 0) throw new Error("No results found");
-        setGalleryImages((prev) => [...prev, ...data.results]);
+        if (data.length === 0) throw new Error("No results found");
+        setGalleryImages((prev) => [...prev, ...data]);
       } catch (error) {
         setError(error as Error);
         throw new Error((error as Error).message);

@@ -51,7 +51,7 @@ function App() {
       setError(null);
 
       try {
-        const data = await fetchImages(searchQuery, currentPage);
+        const data: Photo[] = await fetchImages(searchQuery, currentPage);
 
         if (data.length === 0) throw new Error("No results found");
         setGalleryImages((prev) => [...prev, ...data]);

@@ -9,19 +9,18 @@ interface ImageGalleryProps {
   onImageClick: HandleImageClick;
 }
 
-const ImageGallery: FC<ImageGalleryProps> = ({ items, onImageClick }) => {
-  return (
-    <ul className={css.gallery}>
-      {items.map(({ id, urls: { small, regular }, description }) => (
-        <li key={id} className={css.galleryItem}>
-          <ImageCard
-            url={small}
-            description={description}
-            onImageClick={() => onImageClick({ url: regular, description })}
-          />
-        </li>
-      ))}
-    </ul>
-  );
-};
+const ImageGallery: FC<ImageGalleryProps> = ({ items, onImageClick }) => (
+  <ul className={css.gallery}>
+    {items.map(({ id, urls: { small, regular, full }, description }) => (
+      <li key={id} className={css.galleryItem}>
+        <ImageCard
+          url={small}
+          downloadUrl={full}
+          description={description || "Photo"}
+          onImageClick={() => onImageClick({ url: regular, description: description || "Photo" })}
+        />
+      </li>
+    ))}
+  </ul>
+);
 export default ImageGallery;

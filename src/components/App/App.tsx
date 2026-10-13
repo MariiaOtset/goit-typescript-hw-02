@@ -72,8 +72,14 @@ function App() {
   }, [galleryImages, currentPage]);
 
   return (
-    <div ref={appRef}>
+    <div ref={appRef} className="appShell">
       <SearchBar onSearch={handleSearch} />
+      <section className="galleryIntro" aria-label="Gallery introduction">
+        <p className="eyebrow">PHOTO EXPLORER / UNSPLASH</p>
+        <h1>Find your next <span>inspiration.</span></h1>
+        <p>Explore beautiful photography from around the world. Search for a mood, place, or idea and discover something remarkable.</p>
+      </section>
+      <main className="galleryResults">
 
       {isLoading && galleryImages.length === 0 && <Loader />}
 
@@ -90,6 +96,8 @@ function App() {
       {error && galleryImages.length === 0 && (
         <ErrorMessage message={error.message} />
       )}
+
+      </main>
 
       {modalInfo.isOpen && (
         <ImageModal

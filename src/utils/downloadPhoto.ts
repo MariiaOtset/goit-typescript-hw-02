@@ -21,7 +21,16 @@ export async function downloadPhoto(url: string, description = "photo"): Promise
     link.remove();
     setTimeout(() => URL.revokeObjectURL(objectUrl), 3000);
   } catch {
-    // Direct image opening is a graceful fallback if the image CDN blocks CORS.
-    window.open(url, "_blank", "noopener,noreferrer");
+    // Unsplash image URLs support a dl parameter for attachment downloads.
+    // This also works when browser CORS blocks reading the image as a Blob.
+    const downloadUrl = new URL(url);
+    downloadUrl.searchParams.set("dl", `${filename}.jpg`);
+    const link = document.createElement("a");
+    link.href = downloadUrl.toString();
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 }

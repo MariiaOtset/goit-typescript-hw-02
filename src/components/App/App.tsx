@@ -36,6 +36,18 @@ function App() {
     setCurrentPage(1);
     setSearchQuery(newQuery);
     setGalleryImages([]);
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleGoHome = (): void => {
+    setSearchQuery("");
+    setCurrentPage(1);
+    setGalleryImages([]);
+    setError(null);
+    setIsLoading(false);
+    setModalInfo(INITIAL_MODAL_INFO);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleLoadMore = (): void => setCurrentPage((prev) => prev + 1);
@@ -44,38 +56,47 @@ function App() {
     setModalInfo({ isOpen: true, url, description });
 
   useEffect(() => {
-    if (searchQuery === "") return;
+    if (!searchQuery) return;
+    let cancelled = false;
     async function getImages(): Promise<void> {
       setIsLoading(true);
       setError(null);
       try {
         const data: Photo[] = await fetchImages(searchQuery, currentPage);
+        if (cancelled) return;
         if (data.length === 0) throw new Error("No results found");
         setGalleryImages((prev) => [...prev, ...data]);
-      } catch (error) {
-        setError(error as Error);
+      } catch (caught) {
+        if (!cancelled) setError(caught as Error);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
-    getImages();
+    void getImages();
+    return () => { cancelled = true; };
   }, [searchQuery, currentPage]);
 
   useEffect(() => {
-    if (currentPage === 1) return;
+    if (currentPage === 1 || !searchQuery) return;
     appRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [galleryImages, currentPage]);
+  }, [galleryImages, currentPage, searchQuery]);
 
   return (
     <div ref={appRef} className="appShell">
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} onHome={handleGoHome} searchQuery={searchQuery} />
       {!searchQuery && (
-        <section className="galleryIntro" aria-label="Gallery introduction">
+        <main className="galleryIntro" aria-label="Gallery introduction">
           <div className="introCopy">
             <p className="eyebrow">PHOTO EXPLORER / UNSPLASH</p>
             <h1>Find your next <span>inspiration.</span></h1>
             <p className="introDescription">Explore beautiful photography from around the world. Search for a mood, place, or idea and discover something remarkable.</p>
             <div className="introNote"><span className="noteDot" /> A world of photography, one search away</div>
+            <div className="quickSearch">
+              <span>Try searching for</span>
+              {["Ocean", "Mountains", "Minimalism"].map((query) => (
+                <button key={query} type="button" onClick={() => handleSearch(query.toLowerCase())}>{query} <span aria-hidden="true">↗</span></button>
+              ))}
+            </div>
           </div>
           <div className="introShowcase" aria-hidden="true">
             <div className="showcaseBack" />
@@ -84,7 +105,7 @@ function App() {
           </div>
           <div className="discoverSection">
             <div className="discoverHeading">
-              <div><p className="eyebrow">START EXPLORING</p><h2>What inspires you today?</h2></div>
+              <div><p className="eyebrow">CURATED STARTING POINTS</p><h2>What inspires you today?</h2></div>
               <p>Choose a collection to begin, or search for anything above.</p>
             </div>
             <div className="topicGrid">
@@ -101,22 +122,35 @@ function App() {
                 </button>
               ))}
             </div>
+            <div className="homeFooter">
+              <div><span className="footerMark" aria-hidden="true">✳</span><strong>See the world differently.</strong><span>Find a photo, open the preview, and save what inspires you.</span></div>
+              <span className="footerCredit">PHOTOGRAPHY POWERED BY UNSPLASH</span>
+            </div>
           </div>
-        </section>
+        </main>
       )}
-      <main className="galleryResults">
-        {searchQuery && <div className="resultsHeading"><span className="eyebrow">SEARCH RESULTS</span><h1>Results for “{searchQuery}”</h1><p>Browse, preview, and download your favorite images.</p></div>}
-        {isLoading && galleryImages.length === 0 && <Loader />}
-        {galleryImages.length > 0 && (
-          <>
-            <ImageGallery items={galleryImages} onImageClick={handleImageClick} />
-            {isLoading && <Loader />}
-            {error && <ErrorMessage message={error.message} />}
-            {!error && <LoadMoreBtn onClick={handleLoadMore} />}
-          </>
-        )}
-        {error && galleryImages.length === 0 && <ErrorMessage message={error.message} />}
-      </main>
+      {searchQuery && (
+        <main className="galleryResults">
+          <div className="resultsHeading">
+            <div>
+              <span className="eyebrow">SEARCH RESULTS</span>
+              <h1>Results for “{searchQuery}”</h1>
+              <p>Browse, preview, and download your favorite images.</p>
+            </div>
+            <button className="resultsHomeButton" type="button" onClick={handleGoHome}>← Back to home</button>
+          </div>
+          {isLoading && galleryImages.length === 0 && <Loader />}
+          {galleryImages.length > 0 && (
+            <>
+              <ImageGallery items={galleryImages} onImageClick={handleImageClick} />
+              {isLoading && <Loader />}
+              {error && <ErrorMessage message={error.message} />}
+              {!error && <LoadMoreBtn onClick={handleLoadMore} />}
+            </>
+          )}
+          {error && galleryImages.length === 0 && <ErrorMessage message={error.message} />}
+        </main>
+      )}
       {modalInfo.isOpen && (
         <ImageModal isOpen={modalInfo.isOpen} url={modalInfo.url} description={modalInfo.description} onClose={handleModalClose} />
       )}

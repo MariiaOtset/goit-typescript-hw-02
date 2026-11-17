@@ -1,7 +1,7 @@
 name: Verify Photo Explorer portfolio
 on:
   push:
-    branches: [feat/portfolio-redesign-v1]
+    branches: [feat/portfolio-redesign-v1, feat/portfolio-enhancements-v2]
   pull_request:
     branches: [main]
 permissions:

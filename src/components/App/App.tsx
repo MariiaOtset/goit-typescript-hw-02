@@ -23,11 +23,11 @@ const colors=[{value:"",name:"All colours"},{value:"black_and_white",name:"Black
 export default function App(){
  const [view,setView]=useState<View>("home"),[query,setQuery]=useState(""),[filters,setFilters]=useState<PhotoFilters>({orientation:"",color:""});
  const [page,setPage]=useState(1),[items,setItems]=useState<Photo[]>([]),[totalPages,setTotalPages]=useState(1),[total,setTotal]=useState(0);
- const [loading,setLoading]=useState(false),[error,setError]=useState<string|null>(null);
+ const [loading,setLoading]=useState(false),[error,setError]=useState<string|null>(null),[requestId,setRequestId]=useState(0);
  const [saved,setSaved]=useState<Photo[]>(readSaved),[modal,setModal]=useState<ModalState|null>(null);
  useEffect(()=>{try{localStorage.setItem(STORAGE,JSON.stringify(saved));}catch{/* Browser storage might be unavailable. */}},[saved]);
  useEffect(()=>{const sync=(event:StorageEvent)=>{if(event.key===STORAGE)setSaved(readSaved());};window.addEventListener("storage",sync);return()=>window.removeEventListener("storage",sync);},[]);
- const startSearch=useCallback((value:string)=>{const next=value.trim();if(!next)return;setQuery(next);setFilters({orientation:"",color:""});setItems([]);setTotalPages(1);setTotal(0);setPage(1);setError(null);setView("results");window.scrollTo({top:0,behavior:"smooth"});},[]);
+ const startSearch=useCallback((value:string)=>{const next=value.trim();if(!next)return;setQuery(next);setFilters({orientation:"",color:""});setItems([]);setTotalPages(1);setTotal(0);setPage(1);setRequestId(x=>x+1);setError(null);setView("results");window.scrollTo({top:0,behavior:"smooth"});},[]);
  const goHome=()=>{setModal(null);setView("home");setQuery("");window.scrollTo({top:0,behavior:"smooth"});};
  const goSaved=()=>{setModal(null);setView("saved");window.scrollTo({top:0,behavior:"smooth"});};
  const updateFilters=(key:keyof PhotoFilters,value:string)=>{setFilters(prev=>({...prev,[key]:value}));setItems([]);setTotalPages(1);setPage(1);setError(null);};
@@ -37,7 +37,7 @@ export default function App(){
    setTotal(data.total);setTotalPages(Math.max(1,data.total_pages));
   }).catch(err=>{if(alive)setError(err?.response?.status===403||err?.response?.status===429?"The photography API is temporarily rate-limited. Please try again later.":"We could not load the photos. Check your connection and try again.");}).finally(()=>{if(alive)setLoading(false);});
   return()=>{alive=false;};
- },[view,query,page,filters.orientation,filters.color]);
+ },[view,query,page,filters.orientation,filters.color,requestId]);
  const toggleSave=(photo:Photo)=>setSaved(prev=>prev.some(item=>item.id===photo.id)?prev.filter(item=>item.id!==photo.id):[...prev,photo]);
  const isSaved=(id:string)=>saved.some(photo=>photo.id===id);
  const gallery=view==="saved"?saved:items;
@@ -58,7 +58,7 @@ export default function App(){
    <div className="pe-page-intro"><p className="pe-eyebrow">THE VISUAL ARCHIVE / SEARCH</p><h1 className="pe-serif">Results for <em>“{query}”</em></h1><p>Find your next favourite frame. Open, save, download, or follow the artist back to Unsplash.</p></div>
    <div className="pe-toolbar"><div><p className="pe-eyebrow">{loading&&items.length===0?"DISCOVERING PHOTOS":total.toLocaleString("en-GB")+" RESULTS"}</p><h2 className="pe-serif">Explore the collection.</h2></div><div className="pe-filter-controls"><label>ORIENTATION <select aria-label="Filter photo orientation" value={filters.orientation||""} onChange={e=>updateFilters("orientation",e.target.value)}>{orientations.map(o=><option value={o.value} key={o.value}>{o.name}</option>)}</select></label><label>COLOUR <select aria-label="Filter photo colour" value={filters.color||""} onChange={e=>updateFilters("color",e.target.value)}>{colors.map(c=><option key={c.value} value={c.value}>{c.name}</option>)}</select></label><button className="pe-reset" type="button" onClick={()=>{setFilters({orientation:"",color:""});setItems([]);setPage(1);}}>Reset filters ↺</button></div></div>
    {loading&&items.length===0&&<GallerySkeleton/>}
-   {error&&<div className="pe-message pe-message-error"><h3>Something interrupted the search.</h3><p>{error}</p><button type="button" className="pe-button" onClick={()=>{setError(null);setPage(v=>v===1?2:1);}}>Try again ↗</button></div>}
+   {error&&<div className="pe-message pe-message-error"><h3>Something interrupted the search.</h3><p>{error}</p><button type="button" className="pe-button" onClick={()=>{setError(null);setRequestId(n=>n+1);}}>Try again ↗</button></div>}
    {items.length>0&&<ImageGallery items={items} isSaved={isSaved} onToggleSave={toggleSave} onImageClick={openModal}/>}
    {!loading&&!error&&items.length===0&&<div className="pe-message"><span aria-hidden="true">✳</span><h3>No photos found this time.</h3><p>Try a broader search, or change the colour and orientation filters.</p><button type="button" className="pe-button" onClick={()=>startSearch("landscape")}>Explore landscapes ↗</button></div>}
    {loading&&items.length>0&&<div className="pe-more-note">Discovering more photographs…</div>}

@@ -3,3 +3,5 @@
 
 .boardTools{border-top:1px solid #ffffff3c;margin-top:16px;padding-top:12px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.boardTools>span{font-size:10px;letter-spacing:.13em;color:#bbd0bb;font-weight:800}.boardTools>div{display:flex;gap:8px;flex-wrap:wrap}.boardTools button{border:1px solid #ffffff66;border-radius:100px;padding:9px 13px;background:#ffffff14;color:#f2e9de;font-weight:700;font-size:11px}.boardTools button[aria-pressed=true]{background:#e9cfb6;color:#293d2f;border-color:#e9cfb6}
 @media(max-width:650px){.boardTools{gap:9px}.boardTools>span{font-size:9px}.boardTools button{padding:8px 10px;font-size:10px}}
+
+.modal{overflow-y:auto;overscroll-behavior:contain}.boardTools{flex-shrink:0}

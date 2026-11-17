@@ -50,7 +50,7 @@ export default function App(){
   if(removing)setBoards(prev=>prev.map(board=>({...board,photoIds:board.photoIds.filter(id=>id!==photo.id)})));
  };
  const createBoard=(name:string):boolean=>{
-  const value=name.trim().replace(/\\s+/g," ");
+  const value=name.trim().replace(/\s+/g," ");
   if(value.length<2||value.length>32){toast.error("Use a name between 2 and 32 characters.");return false;}
   if(boards.some(board=>board.name.toLowerCase()===value.toLowerCase())){toast.error("You already have a board with that name.");return false;}
   if(boards.length>=12){toast.error("You can create up to 12 moodboards.");return false;}

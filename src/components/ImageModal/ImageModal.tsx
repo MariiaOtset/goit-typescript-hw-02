@@ -1,12 +1,13 @@
 import {useEffect} from "react";
 import ReactModal from "react-modal";
 import type {Photo} from "../../api/unsplash-api.types";
+import type {Moodboard} from "../../types/moodboard";
 import {registerDownload} from "../../api/unsplash-api";
 import {downloadPhoto} from "../../utils/downloadPhoto";
 import css from "./ImageModal.module.css";
 ReactModal.setAppElement("#root");
-interface Props {photo:Photo;index:number;total:number;onClose:()=>void;onNext:()=>void;onPrevious:()=>void;onToggleSave:(photo:Photo)=>void;isSaved:boolean;}
-export default function ImageModal({photo,index,total,onClose,onNext,onPrevious,onToggleSave,isSaved}:Props){
+interface Props {photo:Photo;index:number;total:number;onClose:()=>void;onNext:()=>void;onPrevious:()=>void;onToggleSave:(photo:Photo)=>void;isSaved:boolean;boards:Moodboard[];onToggleBoard:(photo:Photo,boardId:string)=>void;}
+export default function ImageModal({photo,index,total,onClose,onNext,onPrevious,onToggleSave,isSaved,boards,onToggleBoard}:Props){
  useEffect(()=>{const onKey=(event:KeyboardEvent)=>{if(event.key==="ArrowLeft")onPrevious();if(event.key==="ArrowRight")onNext();};document.addEventListener("keydown",onKey);return()=>document.removeEventListener("keydown",onKey);},[onNext,onPrevious]);
  const alt=photo.alt_description||photo.description||"Photograph by "+photo.user.name;
  const download=async()=>{await registerDownload(photo);await downloadPhoto(photo.urls.full,alt);};

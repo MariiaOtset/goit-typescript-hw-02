@@ -1,26 +1,5 @@
-import css from "./ImageGallery.module.css";
+import type {Photo} from "../../api/unsplash-api.types";
 import ImageCard from "../ImageCard/ImageCard";
-import { FC } from "react";
-import { HandleImageClick } from "../App/App.types";
-import { Photo } from "../../api/unsplash-api.types";
-
-interface ImageGalleryProps {
-  items: Photo[];
-  onImageClick: HandleImageClick;
-}
-
-const ImageGallery: FC<ImageGalleryProps> = ({ items, onImageClick }) => (
-  <ul className={css.gallery}>
-    {items.map(({ id, urls: { small, regular, full }, description }) => (
-      <li key={id} className={css.galleryItem}>
-        <ImageCard
-          url={small}
-          downloadUrl={full}
-          description={description || "Photo"}
-          onImageClick={() => onImageClick({ url: regular, description: description || "Photo" })}
-        />
-      </li>
-    ))}
-  </ul>
-);
-export default ImageGallery;
+import css from "./ImageGallery.module.css";
+interface Props {items:Photo[];onImageClick:(index:number)=>void;isSaved:(id:string)=>boolean;onToggleSave:(photo:Photo)=>void;}
+export default function ImageGallery({items,onImageClick,isSaved,onToggleSave}:Props){return <ul className={css.gallery}>{items.map((photo,index)=><li className={css.galleryItem} key={photo.id}><ImageCard photo={photo} isSaved={isSaved(photo.id)} onToggleSave={onToggleSave} onImageClick={()=>onImageClick(index)}/></li>)}</ul>;}

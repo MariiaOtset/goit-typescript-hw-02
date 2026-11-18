@@ -97,3 +97,28 @@
     padding: 10px 8px;
   }
 }
+
+/* Responsive editorial type: use the available line before a natural wrap. */
+.pe-page-intro{max-width:none;padding-bottom:clamp(20px,2.6vw,35px)}
+.pe-page-intro>p:last-child{max-width:none;font-size:clamp(13px,1.25vw,15px);line-height:1.6}
+.pe-saved .pe-page-intro h1{font-size:clamp(40px,5vw,69px);line-height:1.09;margin:12px 0}
+.pe-saved .pe-toolbar{margin-top:0;padding:19px 0 23px}
+.pe-saved{padding-top:clamp(32px,4vw,58px)}
+@media(min-width:1100px){
+ .pe-saved .pe-page-intro h1{white-space:nowrap}
+ .pe-saved .pe-page-intro>p:last-child{white-space:nowrap}
+ .pe-intro{gap:32px}
+ .pe-intro>div{min-width:0;flex:1}
+ .pe-intro h2{font-size:clamp(38px,4vw,58px)}
+ .pe-intro>p{flex:0 1 340px}
+ .pe-footer h2{font-size:clamp(39px,4.3vw,63px)}
+ .pe-footer-top>div{flex:1;min-width:0}
+}
+@media(max-width:1099px){.pe-saved .pe-page-intro h1{white-space:normal}}
+@media(max-width:650px){
+ .pe-saved{padding-top:30px}
+ .pe-saved .pe-page-intro h1{font-size:clamp(37px,8.3vw,53px)}
+ .pe-page-intro>p:last-child{white-space:normal}
+ .pe-intro h2{font-size:clamp(38px,9vw,60px)}
+ .pe-footer h2{font-size:clamp(42px,8.5vw,68px)}
+}

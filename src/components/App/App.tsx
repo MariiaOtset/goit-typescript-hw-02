@@ -1,4 +1,4 @@
-import {useCallback,useEffect,useState} from "react";
+import {useCallback,useEffect,useLayoutEffect,useState} from "react";
 import type {Photo,PhotoFilters} from "../../api/unsplash-api.types";
 import {searchPhotos} from "../../api/unsplash-api";
 import SearchBar from "../SearchBar/SearchBar";
@@ -30,12 +30,22 @@ export default function App(){
  const [loading,setLoading]=useState(false),[error,setError]=useState<string|null>(null),[requestId,setRequestId]=useState(0);
  const [saved,setSaved]=useState<Photo[]>(readSaved),[modal,setModal]=useState<ModalState|null>(null);
  const [boards,setBoards]=useState<Moodboard[]>(readBoards),[activeBoard,setActiveBoard]=useState("all");
+ const [navigationId,setNavigationId]=useState(0);
+ // Photo Explorer swaps views without React Router. Reset before paint when
+ // switching views or starting a new search, but not for filters/load-more.
+ useLayoutEffect(()=>{
+  const root=document.documentElement;
+  const previous=root.style.scrollBehavior;
+  root.style.scrollBehavior="auto";
+  window.scrollTo(0,0);
+  root.style.scrollBehavior=previous;
+ },[view,navigationId]);
  useEffect(()=>{try{localStorage.setItem(STORAGE,JSON.stringify(saved));}catch{/* Browser storage might be unavailable. */}},[saved]);
  useEffect(()=>{try{localStorage.setItem(BOARDS,JSON.stringify(boards));}catch{/* Browser storage might be unavailable. */}},[boards]);
  useEffect(()=>{const sync=(event:StorageEvent)=>{if(event.key===STORAGE)setSaved(readSaved());if(event.key===BOARDS)setBoards(readBoards());};window.addEventListener("storage",sync);return()=>window.removeEventListener("storage",sync);},[]);
- const startSearch=useCallback((value:string)=>{const next=value.trim();if(!next)return;setQuery(next);setFilters({orientation:"",color:""});setItems([]);setTotalPages(1);setTotal(0);setPage(1);setRequestId(x=>x+1);setError(null);setView("results");window.scrollTo({top:0,behavior:"smooth"});},[]);
- const goHome=()=>{setModal(null);setView("home");setQuery("");window.scrollTo({top:0,behavior:"smooth"});};
- const goSaved=()=>{setModal(null);setView("saved");window.scrollTo({top:0,behavior:"smooth"});};
+ const startSearch=useCallback((value:string)=>{const next=value.trim();if(!next)return;setQuery(next);setFilters({orientation:"",color:""});setItems([]);setTotalPages(1);setTotal(0);setPage(1);setRequestId(x=>x+1);setError(null);setView("results");setNavigationId(n=>n+1);},[]);
+ const goHome=()=>{setModal(null);setView("home");setQuery("");setNavigationId(n=>n+1);};
+ const goSaved=()=>{setModal(null);setView("saved");setNavigationId(n=>n+1);};
  const updateFilters=(key:keyof PhotoFilters,value:string)=>{setFilters(prev=>({...prev,[key]:value}));setItems([]);setTotalPages(1);setPage(1);setError(null);};
  useEffect(()=>{if(view!=="results"||!query)return;let alive=true;setLoading(true);setError(null);
   searchPhotos(query,page,filters).then(data=>{if(!alive)return;

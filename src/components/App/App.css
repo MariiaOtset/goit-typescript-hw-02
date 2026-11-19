@@ -168,3 +168,28 @@
  .pe-color-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
  .pe-color-grid button>span{height:55px}
 }
+
+
+/* Fluid grids, short labels, and long search terms must never expand the layout. */
+.pe-container,.pe-hero-copy,.pe-hero-grid,.pe-hero-visual,.pe-intro,.pe-note,.pe-section-header,.pe-collection-grid,.pe-collection-card,.pe-color-studies,.pe-color-grid,.pe-toolbar,.pe-filter-controls,.pe-page-intro,.pe-results,.pe-saved{min-width:0;max-width:100%}
+.pe-page-intro h1,.pe-hero-copy h1,.pe-section-header h2,.pe-color-studies h2,.pe-footer h2{overflow-wrap:anywhere}
+.pe-hero-actions,.pe-filter-controls{min-width:0;max-width:100%}
+@media(max-width:650px){
+ .pe-hero-grid{grid-template-columns:minmax(0,1fr)}
+ .pe-hero-visual{width:100%;min-width:0}
+ .pe-hero-main{max-width:100%}
+ .pe-hero-overlap{left:2%}
+ .pe-intro,.pe-note,.pe-section-header{min-width:0}
+ .pe-toolbar{width:100%}
+ .pe-filter-controls{width:100%;min-width:0}
+ .pe-filter-controls label{min-width:0!important}
+ .pe-filter-controls select{width:100%;min-width:0;max-width:100%}
+}
+@media(max-width:390px){
+ .pe-collection-grid{grid-template-columns:minmax(0,1fr)}
+ .pe-color-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .pe-hero-copy h1{font-size:clamp(38px,10.5vw,46px)}
+ .pe-hero-visual{height:260px}
+ .pe-color-grid button{min-width:0}
+ .pe-filter-controls{grid-template-columns:minmax(0,1fr)}
+}

@@ -122,3 +122,49 @@
  .pe-intro h2{font-size:clamp(38px,9vw,60px)}
  .pe-footer h2{font-size:clamp(42px,8.5vw,68px)}
 }
+
+
+/* Responsive editorial layouts and compact working views. */
+.appShell,.pe-hero-grid,.pe-hero-copy,.pe-hero-visual,.pe-toolbar,.pe-filter-controls,.pe-section-header{min-width:0;max-width:100%}
+.pe-hero-copy h1,.pe-page-intro h1,.pe-section-header h2,.pe-intro h2{overflow-wrap:break-word;text-wrap:balance}
+.pe-filter-controls label{min-width:0}
+@media(min-width:801px) and (max-width:1120px){
+ .pe-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}
+ .pe-hero-copy h1{font-size:clamp(52px,6vw,76px)}
+ .pe-hero-visual{height:480px}
+}
+@media(max-width:800px){
+ .pe-hero-grid{min-height:0}
+ .pe-hero-copy{padding-top:12px}
+ .pe-hero-footer{margin-top:26px}
+ .pe-intro,.pe-note{padding-top:55px;padding-bottom:55px}
+ .pe-results,.pe-saved{min-width:0}
+ .pe-toolbar{gap:16px}
+}
+@media(max-width:550px){
+ .pe-hero-copy h1{font-size:clamp(42px,11vw,58px);line-height:1.02;margin:17px 0}
+ .pe-hero-visual{height:clamp(260px,82vw,370px)}
+ .pe-hero-actions{gap:12px;margin-top:21px}
+ .pe-hero-footer{gap:10px;flex-wrap:wrap}
+ .pe-intro h2,.pe-note h2,.pe-section-header h2{font-size:clamp(32px,9vw,44px)}
+ .pe-collection-card{min-width:0;padding:12px;min-height:190px}
+ .pe-collection-card strong{font-size:clamp(21px,6vw,29px);overflow-wrap:anywhere;padding-bottom:15px}
+ .pe-collection-card>span:first-child{overflow-wrap:anywhere}
+ .pe-color-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .pe-color-grid button{min-width:0}
+ .pe-color-grid strong,.pe-color-grid small{overflow-wrap:anywhere}
+ .pe-editorial h2{font-size:clamp(39px,11vw,53px)}
+ .pe-page-intro h1{font-size:clamp(37px,10vw,54px)}
+ .pe-filter-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:10px}
+ .pe-filter-controls label{min-width:0!important;width:100%}
+ .pe-filter-controls select{width:100%;min-width:0}
+ .pe-reset{justify-self:start}
+ .pe-toolbar h2{font-size:clamp(24px,7vw,31px)}
+ .pe-message{padding:34px 16px}
+}
+@media(max-width:370px){
+ .pe-collection-grid{grid-template-columns:1fr}
+ .pe-collection-card{min-height:165px}
+ .pe-color-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .pe-color-grid button>span{height:55px}
+}

@@ -1,3 +1,20 @@
 .header{position:sticky;top:0;background:#fbfaf7ed;z-index:50;border-bottom:1px solid #dfe4db;backdrop-filter:blur(17px)}.inner{width:min(100% - 72px,1360px);min-height:85px;margin:auto;display:flex;align-items:center;gap:32px}.brand{border:0;background:none;display:flex;align-items:center;gap:10px;color:#274436;text-align:left;flex-shrink:0;padding:0}.symbol{display:grid;place-items:center;border:1px solid #adbcaa;border-radius:50%;font-size:27px;width:42px;height:42px;color:#b1775c}.brandText{font-size:17px;font-weight:900;line-height:1;letter-spacing:.06em}.brandText em{color:#b57d5b;font-style:normal}.brandText small{display:block;font-size:8px;letter-spacing:.18em;color:#8a9b8c;font-weight:700;margin-top:8px}.navigation{display:flex;gap:28px;align-items:center;margin-left:auto}.navigation button{border:0;background:none;color:#718577;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;min-height:42px;padding:0}.navigation button:hover,.navigation .active{color:#a76b4d}.counter{display:grid;place-items:center;border-radius:50%;background:#e3eadd;color:#3c6250;font-size:10px;width:21px;height:21px}.searchForm{width:min(30%,350px)}.searchBox{display:flex;align-items:center;gap:7px;background:#f1f3ed;border:1px solid #dfe6dd;border-radius:100px;padding:6px 6px 6px 14px}.searchIcon{color:#7b9180;font-size:24px;line-height:1}.searchBox input{min-width:0;flex:1;width:100%;border:0;background:none;outline:0;padding:8px 0;color:#244633;font-size:12px}.searchBox input::placeholder{color:#8c9b8e}.searchBox button{flex:none;border:0;border-radius:50%;width:32px;height:32px;background:#294b3b;color:#fff;font-weight:900;font-size:17px}
 @media(max-width:1040px){.inner{width:calc(100% - 42px);gap:15px}.navigation{gap:16px}.brandText{font-size:14px}.searchForm{width:30%}}
 @media(max-width:740px){.inner{width:calc(100% - 36px);flex-wrap:wrap;gap:5px;min-height:0;padding:15px 0}.symbol{width:35px;height:35px;font-size:23px}.brandText{font-size:14px}.navigation{gap:18px}.navigation button{font-size:12px}.searchForm{order:3;width:100%;padding:9px 0 0}.searchBox{padding:5px 5px 5px 12px}.searchBox input{font-size:14px}}
+
+
+.inner,.brand,.navigation,.searchForm{min-width:0;max-width:100%}
+@media(max-width:740px){
+ .inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:12px 0}
+ .brand{min-width:0}
+ .navigation{grid-column:2;grid-row:1;margin:0;gap:12px}
+ .searchForm{grid-column:1/-1;grid-row:2;order:initial;width:100%;padding:2px 0 0}
+ .searchBox{width:100%;min-width:0}
+ .searchBox input{min-width:0}
+}
+@media(max-width:370px){
+ .brandText{font-size:12px}
+ .navigation{gap:7px}
+ .navigation button{font-size:11px;gap:4px}
+ .symbol{width:31px;height:31px;font-size:20px}
+}

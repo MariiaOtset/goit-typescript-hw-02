@@ -18,3 +18,18 @@
  .navigation button{font-size:11px;gap:4px}
  .symbol{width:31px;height:31px;font-size:20px}
 }
+
+
+/* At narrow widths use two genuine columns with no intrinsic-content overflow. */
+@media(max-width:740px){
+ .inner{grid-template-columns:minmax(0,1fr) minmax(0,max-content)}
+ .navigation{min-width:0}
+ .brandText,.brandText small{overflow-wrap:anywhere}
+ .navigation button{min-width:0}
+}
+@media(max-width:390px){
+ .inner{grid-template-columns:1fr;gap:3px}
+ .brand{grid-column:1;grid-row:1}
+ .navigation{grid-column:1;grid-row:2;justify-content:space-between;width:100%;margin:0}
+ .searchForm{grid-column:1;grid-row:3}
+}
